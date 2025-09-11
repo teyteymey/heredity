@@ -141,6 +141,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     """
     p = 0
     for person in people:
+        prob_gene = -1
         # meaning we calculate the probability of the genes according to the parents
         if person['mother'] is not None and person['father'] is not None:
             mother = person['mother']
@@ -149,24 +150,20 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             prob_father = 0
             # Probability of gene
             if mother in one_gene:
-                
+                prob_mother = 0.5
+            if mother in two_genes:
+                prob_mother = 1 - PROBS["mutation"]
+            else:
+                prob_mother = PROBS["mutation"]
 
+            if father in one_gene:
+                prob_father = 0.5
+            if father in two_genes:
+                prob_father = 1 - PROBS["mutation"]
+            else:
+                prob_father = PROBS["mutation"]
 
-                # ALL COMBOS
-                # 0 mother 0 father
-                # 1 mother 1 father
-                # 1 mother 0 father or 0 mother 1 father
-                # 2 mother 0 father or 0 mother 2 father
-                # 1 mother 2 father or 2 mother 1 father
-                # 2 mother 2 father
-
-                # 1 mother 1 father
-                if (mother in one_gene and father in one_gene):
-                    prob_gene = (((PROBS["mutation"]) * 0,5) + ((1 - PROBS["mutation"]) * 0,5)) * 2
-
-                # 0 mother 0 father
-                if ((mother not in one_gene and mother not in two_genes) and (father not in one_gene and father not in two_genes)):
-                    ((PROBS["mutation"] * 1) + ((1 - PROBS["mutation"]) * 0)) * 2
+            prob_gene = prob_mother * (1 - prob_father) + prob_father * (1 - prob_mother)
 
         else:
             if person in one_gene:
