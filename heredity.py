@@ -139,9 +139,10 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    p = 0
+    joint_p = 1
     for person in people:
         prob_gene = -1
+        # ------ Gene probability calculation --------
         # meaning we calculate the probability of the genes according to the parents
         if person['mother'] is not None and person['father'] is not None:
             mother = person['mother']
@@ -164,24 +165,23 @@ def joint_probability(people, one_gene, two_genes, have_trait):
                 prob_father = PROBS["mutation"]
 
             prob_gene = prob_mother * (1 - prob_father) + prob_father * (1 - prob_mother)
-
+        # prob of each gene
         else:
             if person in one_gene:
-                if person in have_trait:
-                    p += PROBS["gene"][1] * PROBS["trait"][1][True]
-                else:
-                    p += PROBS["gene"][1] * PROBS["trait"][1][False]
+                prob_gene = PROBS["gene"][1]
             elif person in two_genes:
-                if person in have_trait:
-                    p += PROBS["gene"][2] * PROBS["trait"][2][True]
-                else:
-                    p += PROBS["gene"][2] * PROBS["trait"][2][False]
-            # meaning no gene
+                prob_gene = PROBS["gene"][2]
             else:
-                if person in have_trait:
-                    p += PROBS["gene"][0] * PROBS["trait"][0][True]
-                else:
-                    p += PROBS["gene"][0] * PROBS["trait"][0][False]
+                prob_gene = PROBS["gene"][0]
+        
+        p = 0
+        if person in have_trait:
+            p = prob_gene * PROBS["trait"][True]
+        else:
+            p = prob_gene * PROBS["trait"][False]
+
+        joint_p *= p
+        
 
     return p
 
