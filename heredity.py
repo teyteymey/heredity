@@ -146,33 +146,36 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     print(have_trait)
     joint_p = 1
     for person in people:
+        
         print(person)
+        
         n_genes = 0
         if person in one_gene:
             n_genes = 1
         elif person in two_genes:
             n_genes = 2
         
+        person_trait = person in have_trait
         prob_gene = -1
         prob_mother = 0
         prob_father = 0
+        mother = people[person]['mother']
+        father = people[person]['father']
         # ------ Gene probability calculation --------
         # meaning we calculate the probability of the genes according to the parents
-        if people[person]['mother'] is not None and people[person]['father'] is not None:
-            mother = people[person]['mother']
-            father = people[person]['father']
+        if mother is not None and father is not None:
             # Probability of gene passing to kid
             if mother in one_gene:
                 # 50% chance passing it plus the chance of mutating in the other 50%
-                prob_mother = (0.5 * 1 +  0.5 * PROBS["mutation"])
-            if mother in two_genes:
+                prob_mother = 0.5 
+            elif mother in two_genes:
                 prob_mother =( 1 - PROBS["mutation"])
             else:
                 prob_mother = PROBS["mutation"]
 
             if father in one_gene:
-                prob_father =  (0.5 * 1 +  0.5 * PROBS["mutation"])
-            if father in two_genes:
+                prob_father =  0.5 
+            elif father in two_genes:
                 prob_father = 1 - PROBS["mutation"]
             else:
                 prob_father = PROBS["mutation"]
@@ -193,13 +196,7 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         print("prob_father " + str(prob_father))
         print("prob_gene " + str(prob_gene))
         
-        p = 0
-        if person in have_trait:
-            print('true:' + str(PROBS["trait"][n_genes][True]))
-            p = prob_gene * PROBS["trait"][n_genes][True]
-        else:
-            print('false:' + str(PROBS["trait"][n_genes][False]))
-            p = prob_gene * PROBS["trait"][n_genes][False]
+        p = prob_gene * PROBS["trait"][n_genes][person_trait]
 
         joint_p *= p
         print(joint_p, p)
