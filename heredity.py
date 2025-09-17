@@ -164,18 +164,18 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             # Probability of gene passing to kid
             if mother in one_gene:
                 # 50% chance passing it plus the chance of mutating in the other 50%
-                prob_mother = 0.5 * 1 +  0.5 * PROBS["mutation"]
+                prob_mother = (0.5 * 1 +  0.5 * PROBS["mutation"]) * PROBS["gene"][1]
             if mother in two_genes:
-                prob_mother = 1 - PROBS["mutation"]
+                prob_mother =( 1 - PROBS["mutation"]) * PROBS["gene"][2]
             else:
-                prob_mother = PROBS["mutation"]
+                prob_mother = PROBS["mutation"] * PROBS["gene"][0]
 
             if father in one_gene:
-                prob_father =  0.5 * 1 +  0.5 * PROBS["mutation"]
+                prob_father =  (0.5 * 1 +  0.5 * PROBS["mutation"])  * PROBS["gene"][1]
             if father in two_genes:
-                prob_father = 1 - PROBS["mutation"]
+                prob_father = 1 - PROBS["mutation"]* PROBS["gene"][2]
             else:
-                prob_father = PROBS["mutation"]
+                prob_father = PROBS["mutation"]* PROBS["gene"][0]
 
             # meaning both would pass the genes
             if n_genes == 2:
@@ -216,7 +216,21 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
-    raise NotImplementedError
+    for person in probabilities:
+
+        if person in one_gene:
+            probabilities[person]["gene"][1] += p
+        elif person in two_genes:
+            probabilities[person]["gene"][2] += p
+        else:
+            probabilities[person]["gene"][0] += p
+
+        if person in have_trait:
+            probabilities[person]["trait"][True] += p
+        else:
+            probabilities[person]["trait"][False] += p
+    
+    return probabilities
 
 
 def normalize(probabilities):
