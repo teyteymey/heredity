@@ -164,18 +164,18 @@ def joint_probability(people, one_gene, two_genes, have_trait):
             # Probability of gene passing to kid
             if mother in one_gene:
                 # 50% chance passing it plus the chance of mutating in the other 50%
-                prob_mother = (0.5 * 1 +  0.5 * PROBS["mutation"]) * PROBS["gene"][1]
+                prob_mother = (0.5 * 1 +  0.5 * PROBS["mutation"])
             if mother in two_genes:
-                prob_mother =( 1 - PROBS["mutation"]) * PROBS["gene"][2]
+                prob_mother =( 1 - PROBS["mutation"])
             else:
-                prob_mother = PROBS["mutation"] * PROBS["gene"][0]
+                prob_mother = PROBS["mutation"]
 
             if father in one_gene:
-                prob_father =  (0.5 * 1 +  0.5 * PROBS["mutation"])  * PROBS["gene"][1]
+                prob_father =  (0.5 * 1 +  0.5 * PROBS["mutation"])
             if father in two_genes:
-                prob_father = 1 - PROBS["mutation"]* PROBS["gene"][2]
+                prob_father = 1 - PROBS["mutation"]
             else:
-                prob_father = PROBS["mutation"]* PROBS["gene"][0]
+                prob_father = PROBS["mutation"]
 
             # meaning both would pass the genes
             if n_genes == 2:
