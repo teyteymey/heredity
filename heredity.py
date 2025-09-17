@@ -139,16 +139,8 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         * everyone in set `have_trait` has the trait, and
         * everyone not in set` have_trait` does not have the trait.
     """
-    print("calling func")
-    print(people)
-    print(one_gene)
-    print(two_genes)
-    print(have_trait)
     joint_p = 1
     for person in people:
-        
-        print(person)
-        
         n_genes = 0
         if person in one_gene:
             n_genes = 1
@@ -161,12 +153,11 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         prob_father = 0
         mother = people[person]['mother']
         father = people[person]['father']
-        # ------ Gene probability calculation --------
+
         # meaning we calculate the probability of the genes according to the parents
         if mother is not None and father is not None:
             # Probability of gene passing to kid
             if mother in one_gene:
-                # 50% chance passing it plus the chance of mutating in the other 50%
                 prob_mother = 0.5 
             elif mother in two_genes:
                 prob_mother =( 1 - PROBS["mutation"])
@@ -192,15 +183,10 @@ def joint_probability(people, one_gene, two_genes, have_trait):
         else:
             prob_gene = PROBS["gene"][n_genes]
 
-        print("prob_mother " + str(prob_mother))
-        print("prob_father " + str(prob_father))
-        print("prob_gene " + str(prob_gene))
-        
         p = prob_gene * PROBS["trait"][n_genes][person_trait]
 
         joint_p *= p
         print(joint_p, p)
-
 
     return joint_p
 
